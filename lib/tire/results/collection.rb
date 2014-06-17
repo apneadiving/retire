@@ -153,7 +153,12 @@ module Tire
       end
 
       def __find_records_by_ids(klass, ids)
-        @options[:load] === true ? klass.find(ids) : klass.where(id: ids).includes(@options[:include])
+        case @options[:load]
+        when true then klass.find(ids)
+        when Hash then klass.where(id: ids).includes(@options[:load][:include])
+        else
+          raise 'unexpected load'
+        end
       end
     end
 
